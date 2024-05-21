@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: authorino
+  namespace: {{ .Values.kuadrant.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  
+spec:
+  endpoints:
+    - port: http
+  selector:
+    matchLabels:
+      app: authorino
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: limitador
+  namespace: {{ .Values.kuadrant.namespace }}
+spec:
+  endpoints:
+    - port: http
+  selector:
+    matchLabels:
+      app: limitador

@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  name: metrics-configure-labels
+  namespace: {{ .Values.kuadrant.namespace }}
+spec:
+  template:
+    spec:
+      containers: 
+        - image: quay.io/kuadrant/observability-configure:latest
+          command: ["metrics.sh"]
+          name: "configure"
+      restartPolicy: OnFailure 
+  backoffLimit: 15   

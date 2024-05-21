@@ -1,0 +1,15 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: kuadrant-operator-catalog
+  namespace: {{ .Values.kuadrant.namespace }}
+spec:
+  sourceType: grpc
+  image: {{ .Values.kuadrant.indexImage }}
+  displayName: Kuadrant Operators
+  publisher: grpc
+  updateStrategy:
+    registryPoll:
+      interval: 45m
