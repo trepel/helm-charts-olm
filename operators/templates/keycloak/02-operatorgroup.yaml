@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: tools
+  namespace: {{ .Values.keycloak.namespace }}
+spec:
+  targetNamespaces:
+  - {{ .Values.keycloak.namespace }}
+  upgradeStrategy: Default

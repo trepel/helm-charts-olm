@@ -1,0 +1,2 @@
+{{ $args := dict "namespace" .Values.keycloak.namespace "subscription" "rhbk-operator" }}
+{{ include "kuadrant-operators.olm-wait" $args }}

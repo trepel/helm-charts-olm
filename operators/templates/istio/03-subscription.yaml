@@ -1,0 +1,12 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: sailoperator
+  namespace: {{ .Values.istio.namespace }}
+spec:
+  channel: {{ .Values.istio.sail.channel }}
+  installPlanApproval: {{ .Values.istio.sail.installPlanApproval }}
+  name: sailoperator
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: {{ .Values.istio.sail.startingCSV }}

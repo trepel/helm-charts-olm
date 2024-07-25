@@ -1,0 +1,2 @@
+{{ $args := dict "namespace" .Values.istio.namespace "subscription" "sailoperator" }}
+{{ include "kuadrant-operators.olm-wait" $args }}

@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: kuadrant-operator
+  namespace: {{ .Values.kuadrant.namespace }}
+spec:
+  channel: {{ .Values.kuadrant.channel }}
+  installPlanApproval: Automatic
+  name: kuadrant-operator
+  source: kuadrant
+  sourceNamespace: openshift-marketplace

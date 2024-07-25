@@ -1,0 +1,34 @@
+kuadrant:
+  # non-existing namespace to which kuadrant operator will be installed and Kuadrant CR created :(
+  # ; if existing openshift-operators namespace is used no additional OperatorGroup will be created
+  namespace: kuadrant-system
+  # OLM index image to use for kuadrant deployment (creates catalogsource in openshift-marketplace namespace)
+  # ; if left empty it uses official released redhat-operators catalogsource in openshift-marketplace namespace
+  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v0.7.0'
+  channel: stable
+
+istio:
+  namespace: istio-system
+  version: v1.21.0  # this version must be supported by corresponding sail operator version
+  sail:
+    channel: 3.0-dp1
+    startingCSV: sailoperator.v3.0.0-dp1
+    installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
+
+gatewayAPI:
+  version: v1.1.0  # v1.0.0, v1.1.0 available
+
+certManager:
+  namespace: cert-manager  # idk whether this works or not 'cause it seems that cert-manager-operator creates certmanager object in cert-manager namespace
+  version: v1.13.1  # won't work, Subscription's installPlanApproval must be set to Manual
+  operator:
+    channel: stable-v1
+    installPlanApproval: Automatic
+
+keycloak:
+  namespace: tools
+  version: v24.0.5-opr.1  # won't work
+  operator:
+    channel: stable-v24
+    installPlanApproval: Automatic
+

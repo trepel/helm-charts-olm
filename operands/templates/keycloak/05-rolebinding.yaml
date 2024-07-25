@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-reader-exec
+  namespace: {{ .Values.keycloak.namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pod-reader-exec
+subjects:
+- kind: ServiceAccount
+  name: keycloak-config
+  namespace: {{ .Values.keycloak.namespace }}

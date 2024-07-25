@@ -1,0 +1,8 @@
+{{ if ne .Values.kuadrant.namespace "openshift-operators" }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: {{ .Values.kuadrant.namespace }}
+spec: {}
+{{ end }}

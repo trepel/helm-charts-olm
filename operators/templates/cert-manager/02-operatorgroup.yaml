@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: cert-manager-operator
+  namespace: {{ .Values.certManager.namespace }}-operator
+spec:
+  targetNamespaces:
+  - {{ .Values.certManager.namespace }}-operator
+  upgradeStrategy: Default

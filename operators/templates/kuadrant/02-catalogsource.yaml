@@ -1,0 +1,10 @@
+{{- if .Values.kuadrant.indexImage }}
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: kuadrant
+  namespace: openshift-marketplace
+spec:
+  image: {{ .Values.kuadrant.indexImage }}
+  sourceType: grpc
+{{- end }}

@@ -1,0 +1,75 @@
+---
+{{- if not (lookup "v1" "Secret" $.Values.keycloak.namespace "keycloak-postgres") }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-postgres
+  namespace: {{ .Values.keycloak.namespace }}
+  annotations:
+    "helm.sh/resource-policy": "keep"
+type: Opaque
+stringData:
+  username: user
+  password: {{ randAlphaNum 24 }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: keycloak-db
+  namespace: {{ .Values.keycloak.namespace }}
+spec:
+  serviceName: keycloak-db
+  selector:
+    matchLabels:
+      app: keycloak-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: keycloak-db
+    spec:
+      containers:
+        - name: keycloak-db
+          image: quay.io/sclorg/postgresql-15-c9s
+          volumeMounts:
+            - mountPath: /data
+              name: keycloak-data
+          env:
+            - name: POSTGRESQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: username
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: password
+            - name: POSTGRESQL_DATABASE
+              value: keycloak
+            - name: PGDATA
+              value: /data/pgdata
+  volumeClaimTemplates:
+  - metadata:
+      name: keycloak-data
+      labels:
+        app: keycloak-db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-db
+  namespace: {{ .Values.keycloak.namespace }}
+spec:
+  selector:
+    app: keycloak-db
+  type: ClusterIP
+  ports:
+  - port: 5432
+    targetPort: 5432
