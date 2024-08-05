@@ -7,5 +7,9 @@ spec:
   channel: {{ .Values.kuadrant.channel }}
   installPlanApproval: Automatic
   name: kuadrant-operator
+{{- if .Values.kuadrant.indexImage }}
   source: kuadrant
+{{- else }}
+  source: community-operators
+{{- end }}
   sourceNamespace: openshift-marketplace
