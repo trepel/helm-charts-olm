@@ -32,3 +32,4 @@ keycloak:
     channel: stable-v24
     installPlanApproval: Automatic
 
+additionalManifests: []
