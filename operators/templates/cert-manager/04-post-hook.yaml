@@ -1,0 +1,2 @@
+{{ $args := dict "namespace" (printf "%s-%s" .Values.certManager.namespace "operator") "subscription" "openshift-cert-manager-operator" }}
+{{ include "kuadrant-operators.olm-wait" $args }}

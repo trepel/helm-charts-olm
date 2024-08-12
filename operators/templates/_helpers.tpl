@@ -69,8 +69,7 @@ spec:
       - command:
         - /bin/bash
         - /scripts/run.sh
-        # image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-        image: docker.io/bitnami/kubectl
+        image: quay.io/rh_integration/ci-toolbox:latest
         name: post-install
         volumeMounts:
         - name: script-volume

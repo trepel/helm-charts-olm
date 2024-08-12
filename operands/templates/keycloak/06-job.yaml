@@ -15,8 +15,7 @@ spec:
         - /bin/bash
         - -c
         - kubectl exec pod/keycloak-0 -- /bin/bash -c "while ! /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://localhost:8080/ --realm master --user $username --password $password --no-config; do sleep 10; done"
-        # image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
-        image: docker.io/bitnami/kubectl
+        image: quay.io/rh_integration/ci-toolbox:latest  # kubectl
         name: no-ssl
         envFrom:
         - secretRef:
