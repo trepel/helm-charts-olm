@@ -3,4 +3,4 @@ kind: ServiceAccount
 metadata:
   creationTimestamp: null
   name: keycloak-config
-  namespace: {{ .Values.keycloak.namespace }}
+  namespace: {{ .Values.tools.namespace }}

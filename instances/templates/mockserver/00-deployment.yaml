@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mockserver
+  namespace: {{ .Values.tools.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: mockserver
+  template:
+    metadata:
+      labels:
+        deployment: mockserver
+    spec:
+      containers:
+        - image: {{ .Values.tools.mockserver.image }}
+          name: mockserver
+          resources:
+            limits:
+              memory: 2G
+          ports:
+            - containerPort: 1080
+              protocol: TCP
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "init-mockserver"]

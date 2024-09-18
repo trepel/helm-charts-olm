@@ -2,7 +2,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
-  name: kuadrant
+  name: kuadrant-upstream
   namespace: openshift-marketplace
 spec:
   image: {{ .Values.kuadrant.indexImage }}

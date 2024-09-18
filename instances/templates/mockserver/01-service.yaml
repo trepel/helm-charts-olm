@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mockserver
+  namespace: {{ .Values.tools.namespace }}
+spec:
+  type: LoadBalancer
+  ports:
+    - name: 1080-tcp
+      port: 1080
+      protocol: TCP
+      targetPort: 1080
+  selector:
+    deployment: mockserver

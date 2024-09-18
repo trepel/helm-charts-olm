@@ -8,7 +8,7 @@ spec:
   installPlanApproval: Automatic
   name: kuadrant-operator
 {{- if .Values.kuadrant.indexImage }}
-  source: kuadrant
+  source: kuadrant-upstream
 {{- else }}
   source: community-operators
 {{- end }}

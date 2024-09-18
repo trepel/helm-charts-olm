@@ -1,10 +1,10 @@
 ---
-{{- if not (lookup "v1" "Secret" $.Values.keycloak.namespace "keycloak-postgres") }}
+{{- if not (lookup "v1" "Secret" $.Values.tools.namespace "keycloak-postgres") }}
 apiVersion: v1
 kind: Secret
 metadata:
   name: keycloak-postgres
-  namespace: {{ .Values.keycloak.namespace }}
+  namespace: {{ .Values.tools.namespace }}
   annotations:
     "helm.sh/resource-policy": "keep"
 type: Opaque
@@ -17,7 +17,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: keycloak-db
-  namespace: {{ .Values.keycloak.namespace }}
+  namespace: {{ .Values.tools.namespace }}
 spec:
   serviceName: keycloak-db
   selector:
@@ -65,7 +65,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: keycloak-db
-  namespace: {{ .Values.keycloak.namespace }}
+  namespace: {{ .Values.tools.namespace }}
 spec:
   selector:
     app: keycloak-db

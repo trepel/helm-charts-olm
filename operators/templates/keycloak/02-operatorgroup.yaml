@@ -2,8 +2,8 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   name: tools
-  namespace: {{ .Values.keycloak.namespace }}
+  namespace: {{ .Values.tools.namespace }}
 spec:
   targetNamespaces:
-  - {{ .Values.keycloak.namespace }}
+  - {{ .Values.tools.namespace }}
   upgradeStrategy: Default

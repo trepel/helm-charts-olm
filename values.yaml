@@ -4,8 +4,8 @@ kuadrant:
   namespace: kuadrant-system
   # OLM index image to use for kuadrant deployment (creates catalogsource in openshift-marketplace namespace)
   # ; if left empty it uses official released redhat-operators catalogsource in openshift-marketplace namespace
-  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v0.7.0'
-  channel: stable
+  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v0.9.0-rc1'
+  channel: preview
 
 istio:
   namespace: istio-system
@@ -25,11 +25,16 @@ certManager:
     channel: stable-v1
     installPlanApproval: Automatic
 
-keycloak:
+tools:
   namespace: tools
-  version: v24.0.5-opr.1  # won't work
-  operator:
-    channel: stable-v24
-    installPlanApproval: Automatic
+  jaeger:
+    image: quay.io/jaegertracing/all-in-one
+  mockserver:
+    image: quay.io/mganisin/mockserver:latest
+  keycloak:
+    version: v24.0.5-opr.1  # won't work
+    operator:
+      channel: stable-v24
+      installPlanApproval: Automatic
 
 additionalManifests: []
