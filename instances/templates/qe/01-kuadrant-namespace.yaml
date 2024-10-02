@@ -1,3 +1,4 @@
+{{ if eq .Values.tools.enabled "true" }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -5,3 +6,4 @@ metadata:
   name: kuadrant
 spec: {}
 status: {}
+{{end}}

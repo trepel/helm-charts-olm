@@ -1,4 +1,4 @@
----
+{{ if eq .Values.tools.enabled "true" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,3 +13,4 @@ spec:
       targetPort: 1080
   selector:
     deployment: mockserver
+{{end}}

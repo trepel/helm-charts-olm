@@ -1,6 +1,8 @@
+{{ if eq .Values.tools.enabled "true" }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   creationTimestamp: null
   name: keycloak-config
   namespace: {{ .Values.tools.namespace }}
+{{end}}

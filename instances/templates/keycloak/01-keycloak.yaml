@@ -1,3 +1,4 @@
+{{ if eq .Values.tools.enabled "true" }}
 kind: Keycloak
 apiVersion: k8s.keycloak.org/v2alpha1
 metadata:
@@ -27,3 +28,4 @@ spec:
     passwordSecret:
       name: keycloak-postgres
       key: password
+{{end}}

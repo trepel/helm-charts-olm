@@ -1,3 +1,4 @@
+{{ if eq .Values.tools.enabled "true" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -60,3 +61,4 @@ spec:
             requests:
               cpu: "100m"
               memory: "100Mi"
+{{end}}

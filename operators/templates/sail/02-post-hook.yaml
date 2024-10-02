@@ -1,2 +1,4 @@
-{{ $args := dict "namespace" .Values.istio.namespace "subscription" "sailoperator" }}
+{{if eq .Values.istio.istioProvider "sail"}}
+{{ $args := dict "namespace" "openshift-operators" "subscription" "sailoperator" }}
 {{ include "kuadrant-operators.olm-wait" $args }}
+{{end}}

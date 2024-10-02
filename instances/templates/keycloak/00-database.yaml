@@ -1,3 +1,4 @@
+{{ if eq .Values.tools.enabled "true" }}
 ---
 {{- if not (lookup "v1" "Secret" $.Values.tools.namespace "keycloak-postgres") }}
 apiVersion: v1
@@ -73,3 +74,4 @@ spec:
   ports:
   - port: 5432
     targetPort: 5432
+{{end}}

@@ -1,3 +1,4 @@
+{{ if eq .Values.tools.enabled "true" }}
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -9,4 +10,5 @@ spec:
   name: rhbk-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: rhbk-operator.{{ .Values.tools.keycloak.version }}
+  startingCSV: {{ .Values.tools.keycloak.operator.startingCSV }}
+{{end}}

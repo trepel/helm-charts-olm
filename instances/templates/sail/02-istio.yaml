@@ -1,3 +1,4 @@
+{{ if eq .Values.istio.istioProvider "sail" }}
 apiVersion: operator.istio.io/v1alpha1
 kind: Istio
 metadata:
@@ -11,4 +12,5 @@ spec:
         logLevel: info
     pilot:
       autoscaleMin: 2
-  version: {{ .Values.istio.version }}
+  version: {{ .Values.istio.sail.version }}
+{{end}}

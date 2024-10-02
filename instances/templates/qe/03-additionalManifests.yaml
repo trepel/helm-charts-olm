@@ -1,4 +1,6 @@
+{{ if eq .Values.tools.enabled "true" }}
 {{- range .Values.additionalManifests }}
 ---
 {{ tpl (. | toYaml) $ }}
 {{- end }}
+{{end}}
