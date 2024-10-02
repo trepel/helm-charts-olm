@@ -4,7 +4,7 @@ metadata:
   name: openshift-cert-manager-operator
   namespace: {{ .Values.certManager.namespace }}-operator
 spec:
-  channel: {{ .Values.certManager.channel }}
+  channel: {{ .Values.certManager.operator.channel }}
   installPlanApproval: {{ .Values.certManager.operator.installPlanApproval }}
   name: openshift-cert-manager-operator
   source: redhat-operators
