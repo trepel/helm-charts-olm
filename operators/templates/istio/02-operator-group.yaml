@@ -1,9 +1,0 @@
-{{ if ne .Values.istio.namespace "openshift-operators" }}
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: istio-system
-  namespace: {{ .Values.istio.namespace }}
-spec:
-  upgradeStrategy: Default
-{{ end }}
