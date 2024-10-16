@@ -10,5 +10,7 @@ spec:
   name: servicemeshoperator3
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  {{if eq .Values.istio.ossm3.operator.installPlanApproval "Manual"}}
   startingCSV: {{ .Values.istio.ossm3.operator.startingCSV }}
+  {{end}}
 {{end}}

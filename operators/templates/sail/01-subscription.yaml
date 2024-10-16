@@ -10,5 +10,7 @@ spec:
   name: sailoperator
   source: community-operators
   sourceNamespace: openshift-marketplace
+  {{if eq .Values.istio.sail.operator.installPlanApproval "Manual"}}
   startingCSV: {{ .Values.istio.sail.operator.startingCSV }}
+  {{end}}
 {{end}}
