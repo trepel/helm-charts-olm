@@ -4,8 +4,8 @@ kuadrant:
   namespace: kuadrant-system
   # OLM index image to use for kuadrant deployment (creates catalogsource in openshift-marketplace namespace)
   # ; if left empty it uses official released redhat-operators catalogsource in openshift-marketplace namespace
-  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:nightly-16-10-2024'
-  channel: preview  # can be either 'preview' for nightly builds or 'stable' for release builds
+  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v0.11.0'
+  channel: stable  # can be either 'preview' for nightly builds or 'stable' for release builds
 
 gatewayAPI:
   version: v1.1.0  # v1.0.0, v1.1.0 available
@@ -20,14 +20,14 @@ istio:
       startingCSV: sailoperator.v3.0.0-dp1
       installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
 
-  ossm: # Openshift Service Mesh
+  ossm: # Openshift Service Mesh - soon to be deprecated
     version: v2.6
     operator:
       channel: stable
       startingCSV: servicemeshoperator.v2.6.2
       installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
 
-  ossm3: # Openshift Service Mesh, but 3
+  ossm3: # Openshift Service Mesh, but 3 - currently does not work
     version: v1.23.0
     operator:
       channel: candidates
@@ -37,11 +37,11 @@ istio:
 certManager:
   operator:
     channel: stable-v1
-    startingCSV: cert-manager-operator.v1.13.1
+    startingCSV: cert-manager-operator.v1.14.0
     installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
 
 tools:
-  enabled: "true"  # if 'true' the testing environment is set up as well
+  enabled: false  # if 'true' the testing environment is set up as well
   namespace: tools
   jaeger:
     image: quay.io/jaegertracing/all-in-one
@@ -49,8 +49,9 @@ tools:
     image: quay.io/mganisin/mockserver:latest
   keycloak:
     operator:
-      channel: stable-v24
-      startingCSV: rhbk-operator.v24.0.5-opr.1
+      channel: stable-v22
+      #startingCSV: rhbk-operator.v24.0.5-opr.1
+      startingCSV: rhbk-operator.v22.0.13-opr.1
       installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
 
 additionalManifests: []

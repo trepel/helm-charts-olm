@@ -1,0 +1,102 @@
+additionalManifests:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: aws-credentials
+      namespace: kuadrant
+      annotations:
+        base_domain: <hosted domain>
+    data:
+      AWS_ACCESS_KEY_ID: <ID>
+      AWS_REGION: <REGION>
+      AWS_SECRET_ACCESS_KEY: <KEY>
+    type: kuadrant.io/aws
+
+  - apiVersion: v1
+    kind: Secret   
+    metadata:
+      name: gcp-credentials
+      namespace: kuadrant
+      annotations:
+        base_domain: <hosted domain>
+    data:
+      GOOGLE: <KEY>
+      PROJECT_ID: <ID>
+    type: kuadrant.io/gcp
+
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: azure-credentials
+      namespace: kuadrant
+      annotations:
+        base_domain: <hosted domain>
+    data:
+      azure.json: <JSON KEY>
+    type: kuadrant.io/azure
+
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: azure-secret
+      namespace: kuadrant
+    data:
+      clientSecret: <KEY>
+    type: Opaque
+
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: aws-secret
+      namespace: kuadrant
+    data:
+      awsSecretAccessKey: <KEY>
+    type: Opaque
+
+  - apiVersion: cert-manager.io/v1
+    kind: Issuer
+    metadata:
+      name: letsencrypt-staging-issuer
+      namespace: kuadrant
+    spec:
+      acme:
+        email: <EMAIL>
+        preferredChain: ISRG Root X1
+        privateKeySecretRef:
+          name: letsencrypt-private-key
+        server: 'https://acme-staging-v02.api.letsencrypt.org/directory'
+        solvers:
+          - dns01:
+              route53:
+                accessKeyID: <ID>
+                hostedZoneID: <ZONE ID>
+                region: <REGION>
+                secretAccessKeySecretRef:
+                  key: awsSecretAccessKey
+                  name: aws-secret
+            selector:
+              dnsZones:
+                - <hosted domain>
+          - dns01:
+              cloudDNS:
+                hostedZoneName: <hosted domain>
+                project: <PROJECT>
+                serviceAccountSecretRef:
+                  key: GOOGLE
+                  name: gcp-credentials
+            selector:
+              dnsZones:
+                - <hosted domain>
+          - dns01:
+              azureDNS:
+                clientID: <ID>
+                clientSecretSecretRef:
+                  key: clientSecret
+                  name: azure-secret
+                hostedZoneName: <hosted domain>
+                resourceGroupName: kuadrant-permanent
+                subscriptionID: <ID>
+                tenantID: <TENANT ID>
+            selector:
+              dnsZones:
+                - <hosted domain>

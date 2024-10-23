@@ -3,7 +3,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: kuadrant-upstream
-  namespace: openshift-marketplace
+  namespace: {{ .Values.kuadrant.namespace }}
 spec:
   image: {{ .Values.kuadrant.indexImage }}
   sourceType: grpc

@@ -9,7 +9,8 @@ spec:
   name: kuadrant-operator
 {{- if .Values.kuadrant.indexImage }}
   source: kuadrant-upstream
+  sourceNamespace: {{ .Values.kuadrant.namespace }}
 {{- else }}
   source: community-operators
-{{- end }}
   sourceNamespace: openshift-marketplace
+{{- end }}

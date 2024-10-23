@@ -1,4 +1,4 @@
-{{ if eq .Values.tools.enabled "true" }}
+{{ if eq .Values.tools.enabled true }}
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:

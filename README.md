@@ -6,33 +6,51 @@ This chart requires that your cluster has loadbalancing service.
 
 - Kuadrant-operator
 - Red Hat cert-manager
-- Sail operator (Istio)
+- Istio provider (one of)
+  - Sail operator
+  - Openshift service mesh v2
+  - Openshift service mesh v3
 - Gateway API
 
-Testsuite requirements (tools)
+If you choose to deploy testsuite environment by setting `tools.enabled` to true:
+
 - RH Keycloak
 - Jaeger
 - Mockserver
+- `kuadrant` and `kuadrant2` namespaces with additionalManifests.yaml
 
 # How to run
 
 1. Set up values.yaml
-2. Create additionalManifests.yaml with list of DNS provider credentials and Letsencrypt issuer. More info about required objects see [testsuite wiki](https://github.com/Kuadrant/testsuite/wiki/Guide-to-prepare-Openshift-cluster-to-run-testsuite)
-3. Login to your cluster.
-4. Finally run:
+2. Login to your cluster.
+3. Run:
 ```sh
 ./install.sh
 ```
-5. Enjoy
+4. Enjoy
+
+## Testsuite deploy and Environment variables
+
+If you want testsuite environment create additionalManifests.yaml with list of DNS provider credentials and Letsencrypt issuer. More info about required objects see [testsuite wiki](https://github.com/Kuadrant/testsuite/wiki/Guide-to-prepare-Openshift-cluster-to-run-testsuite)
+Look at example-additionalManifests.yaml
+
+Set env variables and run `./testsuite.sh -t`
+
+Env vars:
+- IMAGE sets `kuadrant.indexImage` and defines image of Kuadrant operator, by default it sets today nightly
+- CHANNEL sets `kuadrant.channel` and defines channel of deployed Kuadrant, by default it sets 'preview'
+- DEPLOY_TESTSUITE sets `tools.enabled` and defines if to deploy testsuite environment, by default it sets true
 
 ## Manual helm
+
+If you do not want to use provided `./install.sh`
 
 1. Install Operators
 ```sh
 helm install --values values.yaml --values additionalManifests.yaml --wait -g operators/
 ```
-4. Install instances (operands)
-```
+2. Install instances (operands)
+```sh
 helm install --values values.yaml --values additionalManifests.yaml --wait -g instances/
 ```
 
