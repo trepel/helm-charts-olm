@@ -49,9 +49,8 @@ tools:
     image: quay.io/mganisin/mockserver:latest
   keycloak:
     operator:
-      channel: stable-v22
-      #startingCSV: rhbk-operator.v24.0.5-opr.1
-      startingCSV: rhbk-operator.v22.0.13-opr.1
+      channel: stable-v24
+      startingCSV: rhbk-operator.v24.0.8-opr.1
       installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
 
 additionalManifests: []
