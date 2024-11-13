@@ -12,15 +12,15 @@ gatewayAPI:
 
 istio:
   namespace: istio-system
-  istioProvider: sail  # can be either 'sail' or 'ossm' or 'ossm3'
-  sail:
+  istioProvider: ossm3  # can be either 'sail' or 'ossm' or 'ossm3'
+  sail:  # Deprecated
     version: v1.21.0
     operator:
       channel: 3.0-dp1
       startingCSV: sailoperator.v3.0.0-dp1
       installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
 
-  ossm: # Openshift Service Mesh - soon to be deprecated
+  ossm: # Openshift Service Mesh - Deprecated
     version: v2.6
     operator:
       channel: stable
