@@ -2,21 +2,24 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  creationTimestamp: null
   name: set-no-ssl
   namespace: {{ .Values.tools.namespace }}
 spec:
   backoffLimit: 10
   template:
-    metadata:
-      creationTimestamp: null
     spec:
       containers:
       - command:
         - /bin/bash
         - -c
-        - kubectl exec pod/keycloak-0 -- /bin/bash -c "while ! /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://localhost:8080/ --realm master --user $username --password $password --no-config; do sleep 10; done"
-        image: quay.io/rh_integration/ci-toolbox:latest  # kubectl
+        - >-
+          kubectl exec pod/keycloak-0 --
+          /bin/bash -c
+          "while ! /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://localhost:8080/ --realm master --user $username --password $password --no-config; do sleep 10; done &&
+          /opt/keycloak/bin/kcadm.sh create users --server http://localhost:8080/ --realm master --user $username --password $password -s username=admin -s enabled=true --no-config &&
+          /opt/keycloak/bin/kcadm.sh set-password --server http://localhost:8080/ --realm master --user $username --password $password --username admin --new-password $password --no-config &&
+          /opt/keycloak/bin/kcadm.sh add-roles --server http://localhost:8080/ --realm master --user $username --password $password --uusername admin --rolename admin --no-config"
+        image: quay.io/rhn_support_azgabur/alpine/k8s:latest  # kubectl
         name: set-no-ssl
         envFrom:
         - secretRef:
@@ -24,5 +27,4 @@ spec:
         resources: {}
       serviceAccount: keycloak-config
       restartPolicy: OnFailure
-status: {}
 {{end}}
