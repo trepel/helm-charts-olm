@@ -7,4 +7,6 @@ metadata:
 spec:
   image: {{ .Values.kuadrant.indexImage }}
   sourceType: grpc
+  secrets:
+    - pull-secret
 {{- end }}

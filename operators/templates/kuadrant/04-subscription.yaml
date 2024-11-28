@@ -6,7 +6,7 @@ metadata:
 spec:
   channel: {{ .Values.kuadrant.channel }}
   installPlanApproval: Automatic
-  name: kuadrant-operator
+  name: {{ .Values.kuadrant.operatorName }}
 {{- if .Values.kuadrant.indexImage }}
   source: kuadrant-upstream
   sourceNamespace: {{ .Values.kuadrant.namespace }}
