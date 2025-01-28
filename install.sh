@@ -3,7 +3,7 @@
 
 cd "$(dirname "$0")" || exit 1
 
-IMAGE="${IMAGE:-quay.io/kuadrant/kuadrant-operator-catalog:nightly-$(date +%d-%m-%Y)}"
+#IMAGE="${IMAGE:-quay.io/kuadrant/kuadrant-operator-catalog:nightly-$(date +%d-%m-%Y)}"
 CHANNEL="${CHANNEL:-preview}"
 DEPLOY_TESTSUITE="${DEPLOY_TESTSUITE:-true}"
 
