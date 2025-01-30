@@ -16,15 +16,17 @@ spec:
           kubectl exec pod/keycloak-0 --
           /bin/bash -c
           "while ! /opt/keycloak/bin/kcadm.sh update realms/master -s sslRequired=NONE --server http://localhost:8080/ --realm master --user $username --password $password --no-config; do sleep 10; done &&
-          /opt/keycloak/bin/kcadm.sh create users --server http://localhost:8080/ --realm master --user $username --password $password -s username=admin -s enabled=true --no-config &&
-          /opt/keycloak/bin/kcadm.sh set-password --server http://localhost:8080/ --realm master --user $username --password $password --username admin --new-password $password --no-config &&
-          /opt/keycloak/bin/kcadm.sh add-roles --server http://localhost:8080/ --realm master --user $username --password $password --uusername admin --rolename admin --no-config"
+          /opt/keycloak/bin/kcadm.sh create users --server http://localhost:8080/ --realm master --user $username --password $password -s username=$ADMIN_USERNAME -s enabled=true --no-config &&
+          /opt/keycloak/bin/kcadm.sh set-password --server http://localhost:8080/ --realm master --user $username --password $password --username $ADMIN_USERNAME --new-password $ADMIN_PASSWORD --no-config &&
+          /opt/keycloak/bin/kcadm.sh add-roles --server http://localhost:8080/ --realm master --user $username --password $password --uusername $ADMIN_USERNAME --rolename admin --no-config"
         image: quay.io/rhn_support_azgabur/alpine/k8s:latest  # kubectl
         name: set-no-ssl
         envFrom:
         - secretRef:
-            name: keycloak-initial-admin
+            name: keycloak-initial-admin  # created by Keycloak operator
+        - secretRef:
+            name: credential-sso
         resources: {}
-      serviceAccount: keycloak-config
+      serviceAccountName: keycloak-config
       restartPolicy: OnFailure
 {{end}}
