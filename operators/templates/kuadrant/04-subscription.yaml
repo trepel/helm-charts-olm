@@ -11,6 +11,6 @@ spec:
   source: kuadrant-upstream
   sourceNamespace: {{ .Values.kuadrant.namespace }}
 {{- else }}
-  source: community-operators
+  source: redhat-operators
   sourceNamespace: openshift-marketplace
 {{- end }}
