@@ -3,7 +3,7 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   name: istio-system-operator
-  namespace: istio-system-operator
+  namespace: {{ .Values.istio.operatorNamespace }}
 spec:
   upgradeStrategy: Default
 {{end}}

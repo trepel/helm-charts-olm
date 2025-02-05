@@ -13,22 +13,9 @@ gatewayAPI:
 
 istio:
   namespace: istio-system
-  istioProvider: ossm3  # can be either 'sail' or 'ossm' or 'ossm3'
-  sail:  # Deprecated
-    version: v1.21.0
-    operator:
-      channel: 3.0-dp1
-      startingCSV: sailoperator.v3.0.0-dp1
-      installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
-
-  ossm: # Openshift Service Mesh - Deprecated
-    version: v2.6
-    operator:
-      channel: stable
-      startingCSV: servicemeshoperator.v2.6.2
-      installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually
-
-  ossm3: # Openshift Service Mesh, but 3 - currently does not work
+  operatorNamespace: istio-system-operator
+  istioProvider: ossm3  # need to be set to 'ossm3'
+  ossm3: # Openshift Service Mesh, but version 3
     version: v1.23.0
     operator:
       channel: candidates
