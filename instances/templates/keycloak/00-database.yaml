@@ -10,9 +10,23 @@ metadata:
     "helm.sh/resource-policy": "keep"
 type: Opaque
 stringData:
-  username: user
+  username: keycloakDbUser
   password: {{ randAlphaNum 24 }}
 {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-data-pvc
+  namespace: {{ .Values.tools.namespace }}
+  labels:
+    app: keycloak-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -34,7 +48,7 @@ spec:
         - name: keycloak-db
           image: {{ .Values.tools.keycloak.database.image }}
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /var/lib/pgsql/data
               name: keycloak-data
           env:
             - name: POSTGRESQL_USER
@@ -49,18 +63,10 @@ spec:
                   key: password
             - name: POSTGRESQL_DATABASE
               value: keycloak
-            - name: PGDATA
-              value: /data/pgdata
-  volumeClaimTemplates:
-  - metadata:
-      name: keycloak-data
-      labels:
-        app: keycloak-db
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 5Gi
+      volumes:
+        - name: keycloak-data
+          persistentVolumeClaim:
+            claimName: keycloak-data-pvc
 ---
 apiVersion: v1
 kind: Service
