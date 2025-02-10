@@ -27,7 +27,6 @@ if [ "$1" = "-t" ]; then
       --set tools.enabled="$DEPLOY_TESTSUITE" \
       --wait \
       kuadrant-instances instances/ && \
-    ./hack.sh && \
     echo "Success!"
 else
     echo "Using defaults from values.yaml"
