@@ -63,6 +63,13 @@ spec:
                   key: password
             - name: POSTGRESQL_DATABASE
               value: keycloak
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "1Gi"
+            requests:
+              cpu: "1m"
+              memory: "40Mi"
       volumes:
         - name: keycloak-data
           persistentVolumeClaim:

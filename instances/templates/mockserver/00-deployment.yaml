@@ -19,7 +19,11 @@ spec:
           name: mockserver
           resources:
             limits:
-              memory: 2G
+              cpu: "100m"
+              memory: "1Gi"
+            requests:
+              cpu: "2m"
+              memory: "200Mi"
           ports:
             - containerPort: 1080
               protocol: TCP
