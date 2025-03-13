@@ -6,13 +6,11 @@ This chart requires that your cluster has loadbalancing service.
 
 - Kuadrant-operator
 - Red Hat cert-manager
-- Istio provider (one of)
-  - Sail operator
-  - Openshift service mesh v2
+- Istio provider
   - Openshift service mesh v3
 - Gateway API
 
-If you choose to deploy testsuite environment by setting `tools.enabled` to true:
+If you choose to deploy testsuite:
 
 - RH Keycloak
 - Jaeger
@@ -21,29 +19,27 @@ If you choose to deploy testsuite environment by setting `tools.enabled` to true
 
 # How to run
 
-1. Set up values.yaml
-2. Login to your cluster.
+1. Set up values.yaml and/or `INSTALL_RHCL_GA` environment variable
+2. Login to your cluster
 3. Run:
 ```sh
 ./install.sh
 ```
 4. Enjoy
+5. Cleanup: `./uninstall.sh`
 
-## Testsuite deploy and Environment variables
+Note: If you want to install current RHCL GA just set `INSTALL_RHCL_GA` to "true" and use the helper `./install.sh` script. It overrides certain values from values.yaml so that current RHCL GA is installed. It is not needed to modify values.yaml manually in such a case.
 
-If you want testsuite environment create additionalManifests.yaml with list of DNS provider credentials and Letsencrypt issuer. More info about required objects see [testsuite wiki](https://github.com/Kuadrant/testsuite/wiki/Guide-to-prepare-Openshift-cluster-to-run-testsuite)
+## Testsuite deploy
+
+If you want an environment ready for running [Kuadrant testsuite](https://github.com/Kuadrant/testsuite) create additionalManifests.yaml with list of DNS provider credentials and Letsencrypt issuer. More info about required objects see [testsuite wiki](https://github.com/Kuadrant/testsuite/wiki/Guide-to-prepare-Openshift-cluster-to-run-testsuite)
 Look at example-additionalManifests.yaml
 
-Set env variables and run `./testsuite.sh -t`
-
-Env vars:
-- IMAGE sets `kuadrant.indexImage` and defines image of Kuadrant operator, by default it sets today nightly
-- CHANNEL sets `kuadrant.channel` and defines channel of deployed Kuadrant, by default it sets 'preview'
-- DEPLOY_TESTSUITE sets `tools.enabled` and defines if to deploy testsuite environment, by default it sets true
+Use `-t` flag to get Kuadrant testsuite dependencies installed: `./install.sh -t`. It sets `tools.enabled` to true and makes Helm consume additional values from additionalManifests.yaml.
 
 ## Manual helm
 
-If you do not want to use provided `./install.sh`
+If you do not want to use helper `./install.sh` (and `./uninstall.sh`) script:
 
 1. Install Operators
 ```sh
@@ -63,7 +59,7 @@ $ ./install.sh
 Installing operators
 Error: INSTALLATION FAILED: cannot re-use a name that is still in use
 ```
-To fix this execute `helm uninstall kuadrant-operators`
+To fix this execute `helm uninstall kuadrant-operators`. Similarly if the error shows up during installing instances: `helm uninstall kuadrant-instances`.
 
 ## Unable to continue with install
 
@@ -73,3 +69,10 @@ Installing operators
 Error: INSTALLATION FAILED: Unable to continue with install: CustomResourceDefinition "gatewayclasses.gateway.networking.k8s.io" in namespace "" exists and cannot be imported into the current release: invalid ownership metadata; label validation error: missing key "app.kubernetes.io/managed-by": must be set to "Helm"; annotation validation error: missing key "meta.helm.sh/release-name": must be set to "kuadrant-operators"; annotation validation error: missing key "meta.helm.sh/release-namespace": must be set to "default"
 ```
 This happens if there are some leftovers there on a cluster. Typically the Kuadrant had been installed on the cluster previously not using Helm. To overcome such issues everything that Helm creates needs to be removed prior to installing via Helm. For this particular error the Gateway API CRDs needed to be removed.
+
+## Last Resort
+If there are not any leftovers from previous installations and the Helm install/uninstall is still failing, the "Helm internal stuff" needs to be cleared up as well.
+
+`helm ls -a` - to see if there is some Helm release on the cluster.
+
+If there is, one needs to remove the "Helm" secret from `default` namespace. The secret name looks similar to `sh.helm.release.v1.kuadrant-operators.v1`. Once removed (and no leftovers are indeed on the cluster) the Helm install/uninstall starts working as expected.
