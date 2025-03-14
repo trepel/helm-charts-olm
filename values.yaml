@@ -7,6 +7,7 @@ kuadrant:
   indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.0.2' # leave empty for donwstream GA, example value for upstream: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.0.2'
   operatorName: kuadrant-operator  # 'kuadrant-operator' or 'rhcl-operator' if installing downstream
   channel: stable  # can be either 'preview' for nightly builds and release candidates or 'stable' for release builds
+  pullSecret: ""  # (Optional) Name of pull secret for pulling indexImage
 
 gatewayAPI:
   version: v1.1.0  # v1.0.0, v1.1.0 available

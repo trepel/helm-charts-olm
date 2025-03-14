@@ -8,3 +8,10 @@ spec:
   image: {{ .Values.kuadrant.indexImage }}
   sourceType: grpc
 {{- end }}
+{{- if .Values.kuadrant.pullSecret }}
+  secrets:
+    - {{.Values.kuadrant.pullSecret}}
+  updateStrategy:
+    registryPoll:
+      interval: 3m
+{{- end }}
