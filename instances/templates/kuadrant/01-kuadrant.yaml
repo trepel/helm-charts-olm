@@ -1,6 +1,8 @@
+{{ if ne .Values.kuadrant.operatorName "authorino-operator" }}
 apiVersion: kuadrant.io/v1beta1
 kind: Kuadrant
 metadata:
   name: kuadrant-sample
   namespace: {{ .Values.kuadrant.namespace }}
 spec: {}
+{{ end }}
