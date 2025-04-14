@@ -100,3 +100,11 @@ additionalManifests:
             selector:
               dnsZones:
                 - <hosted domain>
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: wasm-plugin-pull-secret
+      namespace: kuadrant
+    data:
+      .dockerconfigjson: <dockerconfig>
+    type: kubernetes.io/dockerconfigjson
