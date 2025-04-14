@@ -10,7 +10,7 @@ kuadrant:
   pullSecret: ""  # (Optional) Name of pull secret for pulling indexImage
 
 gatewayAPI:
-  version: v1.1.0  # v1.0.0, v1.1.0 available
+  version: v1.2.1  # v1.0.0, v1.1.0, v1.2.1 available
 
 istio:
   namespace: istio-system
