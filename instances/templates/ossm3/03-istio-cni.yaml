@@ -1,0 +1,9 @@
+{{if eq .Values.istio.istioProvider "ossm3"}}
+apiVersion: sailoperator.io/v1
+kind: IstioCNI
+metadata:
+  name: default
+spec:
+  namespace: {{ .Values.istio.cniNamespace }}
+  version: {{ .Values.istio.ossm3.version }}
+{{end}}

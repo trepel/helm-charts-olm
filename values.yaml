@@ -14,6 +14,7 @@ gatewayAPI:
 
 istio:
   namespace: istio-system
+  cniNamespace: istio-cni
   operatorNamespace: istio-system-operator
   istioProvider: ossm3  # need to be set to 'ossm3'
   ossm3: # Openshift Service Mesh, but version 3
