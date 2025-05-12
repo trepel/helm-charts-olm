@@ -1,6 +1,14 @@
 # Helm chart for deploying Kuadrant and testing environment
 
-This chart requires that your cluster has loadbalancing service.
+This chart requires that your cluster has loadbalancing service capability. It is divided into two parts. 
+**Operators chart** installs OLM operators first and after waiting for the full deployment the **Instnaces chart** will 
+install the rest of custom CR's provided by those Operators.
+
+These charts can help with installing different versions of Kuadrant on an **Openshift** cluster:
+- Community stable Kuadrant operator released build
+- Stable, nightly or any developer preview released build from [Quay](https://quay.io/repository/kuadrant/kuadrant-operator-catalog?tab=tags)
+- Red Hat Connectivity Link released build (a `wasm-plugin-pull-secret` secret needed)
+- Red Hat Connectivity Link pre-release build _for testing_
 
 # What is installed
 
@@ -8,9 +16,9 @@ This chart requires that your cluster has loadbalancing service.
 - Red Hat cert-manager
 - Istio provider
   - Openshift service mesh v3
-- Gateway API
+- Gateway API CRD's
 
-If you choose to deploy testsuite:
+If you choose to enable Kuadrant testing environment with `tools.enable=true`:
 
 - RH Keycloak
 - Jaeger
@@ -28,7 +36,9 @@ If you choose to deploy testsuite:
 4. Enjoy
 5. Cleanup: `./uninstall.sh`
 
-Note: If you want to install current RHCL GA just set `INSTALL_RHCL_GA` to "true" and use the helper `./install.sh` script. It overrides certain values from values.yaml so that current RHCL GA is installed. It is not needed to modify values.yaml manually in such a case.
+Note: If you want to install current RHCL GA just set `INSTALL_RHCL_GA` to "true" and use the helper 
+`./install.sh` script. It overrides certain values from values.yaml so that current RHCL GA is installed. 
+It is not needed to modify values.yaml manually in such a case.
 
 ## Testsuite deploy
 

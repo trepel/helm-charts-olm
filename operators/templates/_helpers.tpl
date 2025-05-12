@@ -3,7 +3,6 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  creationTimestamp: null
   name: post-install-hook-{{ .subscription }}
   namespace: {{ .namespace }}
 ---
@@ -47,14 +46,12 @@ data:
     kubectl wait --for=condition=Installed installplan ${ip} --timeout=60s
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: post-install-hook-{{ .subscription }}
   namespace: {{ .namespace }}
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  creationTimestamp: null
   name: post-install-hook-{{ .subscription }}
   namespace: {{ .namespace }}
   annotations:
@@ -62,8 +59,6 @@ metadata:
 spec:
   backoffLimit: 10
   template:
-    metadata:
-      creationTimestamp: null
     spec:
       containers:
       - command:

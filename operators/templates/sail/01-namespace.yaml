@@ -1,8 +1,0 @@
-{{if eq .Values.istio.istioProvider "sail"}}
-apiVersion: v1
-kind: Namespace
-metadata:
-  creationTimestamp: null
-  name: istio-system-operator
-spec: {}
-{{end}}

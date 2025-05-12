@@ -1,9 +1,0 @@
-{{if eq .Values.istio.istioProvider "sail"}}
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: istio-system-operator
-  namespace: istio-system-operator
-spec:
-  upgradeStrategy: Default
-{{end}}

@@ -6,6 +6,6 @@ metadata:
   namespace: {{ .Values.tools.namespace }}
 spec:
   targetNamespaces:
-  - {{ .Values.tools.namespace }}
+    - {{ .Values.tools.namespace }}
   upgradeStrategy: Default
 {{end}}
