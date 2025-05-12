@@ -1,0 +1,8 @@
+[allowlist]
+description = "Global Allowlist"
+
+paths = [
+    # Ignore testing CA
+    "instances/templates/cert-manager/ca/tls.key",
+    "instances/templates/cert-manager/02-ca.yaml"
+]
