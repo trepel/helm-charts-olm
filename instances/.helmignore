@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+# CA files
+*.crt
+*.key
