@@ -23,6 +23,8 @@ If you choose to enable Kuadrant testing environment with `tools.enable=true`:
 - RH Keycloak
 - Jaeger
 - Mockserver
+- Redis
+- Dragonfly
 - `kuadrant` and `kuadrant2` namespaces with additionalManifests.yaml
 
 # How to run
