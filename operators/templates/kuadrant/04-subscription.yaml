@@ -17,7 +17,7 @@ spec:
   config:
     env:
       - name: "AUTH_SERVICE_TIMEOUT"
-        value: "500ms"
+        value: "1000ms"
 {{- if eq .Values.istio.istioProvider "ocp"}}
       - name: "ISTIO_GATEWAY_CONTROLLER_NAMES"
         value: "openshift.io/gateway-controller/v1"
