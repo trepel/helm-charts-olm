@@ -37,14 +37,14 @@ istio:
     operator:
       channel: stable
       startingCSV: servicemeshoperator3.v3.0.0  # Ignored if 'Automatic' bellow
-      installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually TODO auto-approve
+      installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
 
 # Kuadrant operator dependency
 certManager:
   operator:
     channel: stable-v1
     startingCSV: cert-manager-operator.v1.15.0 # Ignored if 'Automatic' bellow
-    installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually TODO auto-approve
+    installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
 
 # Additional dependencies used for Kuadrant testing
 tools:
@@ -58,7 +58,7 @@ tools:
     operator:
       channel: stable-v26
       startingCSV: rhbk-operator.v26.0.10-opr.1 # Ignored if 'Automatic' bellow
-      installPlanApproval: Automatic  # if set to Manual InstallPlan has to be approved manually TODO auto-approve
+      installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
     database:
       image: quay.io/sclorg/postgresql-16-c10s
   redis:

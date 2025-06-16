@@ -1,4 +1,4 @@
-{{/* OLM wait for installplan */}}
+{{/* OLM wait for installplan; approves installplan */}}
 {{- define "kuadrant-operators.olm-wait" }}
 apiVersion: v1
 kind: ServiceAccount
@@ -19,6 +19,7 @@ rules:
   - installplans
   verbs:
   - get
+  - patch
   - list
   - watch
 ---
@@ -43,6 +44,7 @@ data:
     set -xe
     kubectl wait --for=jsonpath={.status.installPlanRef.name} subscription {{ .subscription }} --timeout=10s
     ip=$(kubectl get subscription {{ .subscription }} -o=jsonpath={.status.installPlanRef.name})
+    kubectl patch installplan ${ip} --type merge --patch '{"spec":{"approved":true}}'
     kubectl wait --for=condition=Installed installplan ${ip} --timeout=60s
 kind: ConfigMap
 metadata:
@@ -64,7 +66,7 @@ spec:
       - command:
         - /bin/bash
         - /scripts/run.sh
-        image: quay.io/rh_integration/ci-toolbox:latest
+        image: quay.io/kuadrant/testsuite-pipelines-tools:latest
         name: post-install
         volumeMounts:
         - name: script-volume
