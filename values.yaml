@@ -4,10 +4,11 @@ kuadrant:
   namespace: kuadrant-system
 
   # OLM index image to use for kuadrant deployment, creates CatalogSource CR with this image
-  # If left empty it uses official released 'redhat-operators' catalogsource in openshift-marketplace namespace
-  # For list of available upstream catalog-source see https://quay.io/repository/kuadrant/kuadrant-operator-catalog?tab=tags
-  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.2.0' # leave empty for donwstream GA, example value for upstream: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.0.2'
+  # If left empty it uses CatalogSource defined in catalogSource
+  # For list of available upstream CatalogSource's see https://quay.io/repository/kuadrant/kuadrant-operator-catalog?tab=tags
+  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.2.0'
 
+  # (optional)
   # Name of pull secret for pulling indexImage if needed. Can be left empty.
   pullSecret: ""
 
@@ -18,6 +19,28 @@ kuadrant:
   # 'preview' for nightly builds, release candidates and builds from Pull requests
   # 'stable' for released builds
   channel: stable
+
+  # (optional)
+  # redhat-operators for downstream
+  # or
+  # name of a custom CatalogSource. Be sure to set catalogSourceNamespace as well
+  catalogSource: "redhat-operators"
+
+  # (optional)
+  # "openshift-marketplace" is the default namespace for CatalogSources
+  catalogSourceNamespace: "openshift-marketplace"
+
+  # (optional)
+  # If installation of a lower than the newest version is required, set this to 'Manual' and set startingCSV
+  installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
+
+  # (optional)
+  # When installPlanApproval is set to 'Manual' this exact version will be installed
+  # Examples:
+  # rhcl-operator.v1.1.0
+  # kuadrant-operator.v0.0.0 = nightlies
+  # kuadrant-operator.v1.2.0
+  startingCSV: "kuadrant-operator.v0.0.0"
 
 # Installs Gateway API CRD's on cluster. Not needed for Openshift 4.19+
 gatewayAPI:

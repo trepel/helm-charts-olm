@@ -4,15 +4,18 @@ metadata:
   name: kuadrant-operator
   namespace: {{ .Values.kuadrant.namespace }}
 spec:
-  channel: {{ .Values.kuadrant.channel }}
-  installPlanApproval: Automatic
   name: {{ .Values.kuadrant.operatorName }}
+  channel: {{ .Values.kuadrant.channel }}
+  installPlanApproval: {{ .Values.kuadrant.installPlanApproval }}
+{{- if eq .Values.kuadrant.installPlanApproval "Manual" }}
+  startingCSV: {{ .Values.kuadrant.startingCSV }}
+{{- end }}
 {{- if .Values.kuadrant.indexImage }}
   source: kuadrant-upstream
   sourceNamespace: {{ .Values.kuadrant.namespace }}
 {{- else }}
-  source: redhat-operators
-  sourceNamespace: openshift-marketplace
+  source: {{ .Values.kuadrant.catalogSource }}
+  sourceNamespace: {{ .Values.kuadrant.catalogSourceNamespace }}
 {{- end }}
   config:
     env:
