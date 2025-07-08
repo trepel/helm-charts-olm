@@ -6,6 +6,7 @@ additionalManifests:
       namespace: kuadrant
       annotations:
         base_domain: <hosted domain>
+        "helm.sh/resource-policy": "keep"
     data:
       AWS_ACCESS_KEY_ID: <ID>
       AWS_REGION: <REGION>
@@ -19,6 +20,7 @@ additionalManifests:
       namespace: kuadrant
       annotations:
         base_domain: <hosted domain>
+        "helm.sh/resource-policy": "keep"
     data:
       GOOGLE: <KEY>
       PROJECT_ID: <ID>
@@ -31,6 +33,7 @@ additionalManifests:
       namespace: kuadrant
       annotations:
         base_domain: <hosted domain>
+        "helm.sh/resource-policy": "keep"
     data:
       azure.json: <JSON KEY>
     type: kuadrant.io/azure
@@ -40,6 +43,8 @@ additionalManifests:
     metadata:
       name: azure-secret
       namespace: kuadrant
+      annotations:
+        "helm.sh/resource-policy": "keep"
     data:
       clientSecret: <KEY>
     type: Opaque
@@ -49,6 +54,8 @@ additionalManifests:
     metadata:
       name: aws-secret
       namespace: kuadrant
+      annotations:
+        "helm.sh/resource-policy": "keep"
     data:
       awsSecretAccessKey: <KEY>
     type: Opaque
@@ -105,6 +112,8 @@ additionalManifests:
     metadata:
       name: wasm-plugin-pull-secret
       namespace: kuadrant
+      annotations:
+        "helm.sh/resource-policy": "keep"
     data:
       .dockerconfigjson: <dockerconfig>
     type: kubernetes.io/dockerconfigjson
