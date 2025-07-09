@@ -1,0 +1,30 @@
+tools:
+  namespace: tools
+  jaeger:
+    enable: true
+    image: quay.io/jaegertracing/all-in-one
+  mockserver:
+    enable: true
+    image: quay.io/trepel/mockserver:mganisin
+  keycloak:
+    enable: true
+    # 'operator' for RHBK operator
+    # 'deployment' for Keycloak deployment
+    keycloakProvider: "operator"
+    operator:
+      channel: stable-v26
+      startingCSV: rhbk-operator.v26.0.10-opr.1 # Ignored if 'Automatic' bellow
+      installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
+    deployment:
+      image: quay.io/keycloak/keycloak:26.3
+    database:
+      image: quay.io/sclorg/postgresql-16-c10s
+  redis:
+    enable: true
+    image: quay.io/opstree/redis:latest
+  dragonfly:
+    enable: true
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+  valkey:
+    enable: true
+    image: ghcr.io/valkey-io/valkey:latest

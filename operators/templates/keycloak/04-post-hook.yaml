@@ -1,4 +1,0 @@
-{{ if eq .Values.tools.enabled true }}
-{{ $args := dict "namespace" .Values.tools.namespace "subscription" "rhbk-operator" }}
-{{ include "kuadrant-operators.olm-wait" $args }}
-{{end}}

@@ -1,0 +1,17 @@
+{{ if and (.Values.tools.keycloak.enable) (eq .Values.tools.keycloak.keycloakProvider "operator") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: {{ .Values.tools.namespace }}
+  labels:
+    app: keycloak
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+  type: LoadBalancer
+{{end}}

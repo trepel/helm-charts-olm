@@ -1,0 +1,7 @@
+{{ if .Values.tools.keycloak.enable }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: keycloak-config
+  namespace: {{ .Values.tools.namespace }}
+{{end}}

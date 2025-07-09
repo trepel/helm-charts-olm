@@ -38,6 +38,10 @@ subjects:
   namespace: {{ .namespace }}
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-install-hook-{{ .subscription }}
+  namespace: {{ .namespace }}
 data:
   "run.sh": |
     #/bin/bash
@@ -46,10 +50,6 @@ data:
     ip=$(kubectl get subscription {{ .subscription }} -o=jsonpath={.status.installPlanRef.name})
     kubectl patch installplan ${ip} --type merge --patch '{"spec":{"approved":true}}'
     kubectl wait --for=condition=Installed installplan ${ip} --timeout=60s
-kind: ConfigMap
-metadata:
-  name: post-install-hook-{{ .subscription }}
-  namespace: {{ .namespace }}
 ---
 apiVersion: batch/v1
 kind: Job

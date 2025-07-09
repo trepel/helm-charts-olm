@@ -1,2 +1,2 @@
 {{ $args := dict "namespace" "cert-manager-operator" "subscription" "openshift-cert-manager-operator" }}
-{{ include "kuadrant-operators.olm-wait" $args }}
+{{ include "operators.olm-wait" $args }}

@@ -1,8 +1,9 @@
-# Helm chart for deploying Kuadrant and testing environment
+# Helm charts for deploying Kuadrant and testing environment
 
-This chart requires that your cluster has loadbalancing service capability. It is divided into two parts. 
+These charts require that your cluster has loadbalancing service capability. It is divided into two parts. 
 **Operators chart** installs OLM operators first and after waiting for the full deployment the **Instnaces chart** will 
-install the rest of custom CR's provided by those Operators.
+install the rest of custom CR's provided by those Operators. Additionally, you can choose to deploy testing tools charts
+which are also divided into operators and instances charts.
 
 These charts can help with installing different versions of Kuadrant on an **Openshift** cluster:
 - Community stable Kuadrant operator released build
@@ -20,16 +21,21 @@ These charts can help with installing different versions of Kuadrant on an **Ope
 
 If you choose to enable Kuadrant testing environment with `tools.enable=true`:
 
-- RH Keycloak
+- `kuadrant` and `kuadrant2` namespaces
+- testing CA issuers
+
+If you choose to install tools charts:
+
+- RH Keycloak or community Keycloak
 - Jaeger
 - Mockserver
 - Redis
 - Dragonfly
-- `kuadrant` and `kuadrant2` namespaces with additionalManifests.yaml
+- Valkey
 
 # How to run
 
-1. Set up values.yaml and/or `INSTALL_RHCL_GA` environment variable
+1. Set up [values.yaml](./values.yaml), [tool values.yaml](tools/values.yaml)
 2. Login to your cluster
 3. Run:
 ```sh
@@ -44,10 +50,15 @@ It is not needed to modify values.yaml manually in such a case.
 
 ## Testsuite deploy
 
-If you want an environment ready for running [Kuadrant testsuite](https://github.com/Kuadrant/testsuite) create additionalManifests.yaml with list of DNS provider credentials and Letsencrypt issuer. More info about required objects see [testsuite wiki](https://github.com/Kuadrant/testsuite/wiki/Guide-to-prepare-Openshift-cluster-to-run-testsuite)
-Look at example-additionalManifests.yaml
+If you want an environment ready for running [Kuadrant testsuite](https://github.com/Kuadrant/testsuite) 
+create additionalManifests.yaml with list of DNS provider credentials and Letsencrypt issuer. 
+More info about required objects see [testsuite wiki](https://github.com/Kuadrant/testsuite/wiki/Guide-to-prepare-Openshift-cluster-to-run-testsuite)
+Look at [example-additionalManifests.yaml](./example-additionalManifests.yaml)
 
-Use `-t` flag to get Kuadrant testsuite dependencies installed: `./install.sh -t`. It sets `tools.enabled` to true and makes Helm consume additional values from additionalManifests.yaml.
+Use `-t` flag to get Kuadrant testsuite dependencies installed: `./install.sh -t`. It sets `tools.enabled` to true 
+and makes Helm consume additional values from additionalManifests.yaml and installs [tools](./tools) helm charts.
+
+If you want to install just tools use `./tools-install.sh`
 
 ## Manual helm
 
@@ -55,11 +66,21 @@ If you do not want to use helper `./install.sh` (and `./uninstall.sh`) script:
 
 1. Install Operators
 ```sh
-helm install --values values.yaml --values additionalManifests.yaml --wait -g operators/
+helm install --values values.yaml --wait -g operators/
 ```
 2. Install instances (operands)
 ```sh
-helm install --values values.yaml --values additionalManifests.yaml --wait --timeout 10m -g instances/
+helm install --values values.yaml --values additionalManifests.yaml --wait -g instances/
+```
+
+3. (Optional) Install tools operators
+```sh
+helm install --values tools/values.yaml --wait -g tools/operators/
+```
+
+4. (Optional) Install tools instances
+```sh
+helm install --values tools/values.yaml --wait --timeout 10m -g tools/instances/
 ```
 
 # Troubleshooting
@@ -80,7 +101,7 @@ $ ./install.sh
 Installing operators
 Error: INSTALLATION FAILED: Unable to continue with install: CustomResourceDefinition "gatewayclasses.gateway.networking.k8s.io" in namespace "" exists and cannot be imported into the current release: invalid ownership metadata; label validation error: missing key "app.kubernetes.io/managed-by": must be set to "Helm"; annotation validation error: missing key "meta.helm.sh/release-name": must be set to "kuadrant-operators"; annotation validation error: missing key "meta.helm.sh/release-namespace": must be set to "default"
 ```
-This happens if there are some leftovers there on a cluster. Typically the Kuadrant had been installed on the cluster previously not using Helm. To overcome such issues everything that Helm creates needs to be removed prior to installing via Helm. For this particular error the Gateway API CRDs needed to be removed.
+This happens if there are some leftovers there on a cluster. Typically, the Kuadrant had been installed on the cluster previously not using Helm. To overcome such issues everything that Helm creates needs to be removed prior to installing via Helm. For this particular error the Gateway API CRDs needed to be removed.
 
 ## Last Resort
 If there are not any leftovers from previous installations and the Helm install/uninstall is still failing, the "Helm internal stuff" needs to be cleared up as well.

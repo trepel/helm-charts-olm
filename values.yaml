@@ -69,26 +69,9 @@ certManager:
     startingCSV: cert-manager-operator.v1.15.0 # Ignored if 'Automatic' bellow
     installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
 
-# Additional dependencies used for Kuadrant testing
+# Optional objects used for Kuadrant testing
+# Note: For setting tools values go to tools/values.yaml
 tools:
-  enabled: false  # if 'true' the testing environment will be set up
-  namespace: tools
-  jaeger:
-    image: quay.io/jaegertracing/all-in-one
-  mockserver:
-    image: quay.io/trepel/mockserver:mganisin
-  keycloak:
-    operator:
-      channel: stable-v26
-      startingCSV: rhbk-operator.v26.0.10-opr.1 # Ignored if 'Automatic' bellow
-      installPlanApproval: Automatic  # can be 'Automatic' or 'Manual'
-    database:
-      image: quay.io/sclorg/postgresql-16-c10s
-  redis:
-    image: quay.io/opstree/redis:latest
-  dragonfly:
-    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
-  valkey:
-    image: ghcr.io/valkey-io/valkey:latest
+  enabled: "false"  # if 'true' the testing environment will be set up
 
 additionalManifests: []

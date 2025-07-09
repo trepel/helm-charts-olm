@@ -1,0 +1,11 @@
+{{ if and (.Values.tools.keycloak.enable) (eq .Values.tools.keycloak.keycloakProvider "operator") }}
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: tools
+  namespace: {{ .Values.tools.namespace }}
+spec:
+  targetNamespaces:
+    - {{ .Values.tools.namespace }}
+  upgradeStrategy: Default
+{{end}}

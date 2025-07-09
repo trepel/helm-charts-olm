@@ -1,0 +1,66 @@
+{{ if and (.Values.tools.keycloak.enable) (eq .Values.tools.keycloak.keycloakProvider "deployment") }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: keycloak
+  namespace: {{ .Values.tools.namespace }}
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: {{ .Values.tools.keycloak.deployment.image }}
+          args:
+            - start-dev
+            - --health-enabled=true
+          startupProbe:
+            httpGet:
+              path: /health/ready
+              port: health
+            initialDelaySeconds: 3
+            failureThreshold: 30
+            periodSeconds: 5
+          env:
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-initial-admin
+                  key: username
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-initial-admin
+                  key: password
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
+            - name: KC_DB
+              value: "postgres"
+            - name: "KC_DB_URL"
+              value: "jdbc:postgresql://keycloak-db/keycloak"
+            - name: "KC_DB_USERNAME"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: username
+            - name: "KC_DB_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: password
+          ports:
+            - name: auth
+              containerPort: 8080
+            - name: health
+              containerPort: 9000
+{{ end }}

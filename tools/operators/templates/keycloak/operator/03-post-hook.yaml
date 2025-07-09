@@ -1,0 +1,4 @@
+{{ if and (.Values.tools.keycloak.enable) (eq .Values.tools.keycloak.keycloakProvider "operator") }}
+{{ $args := dict "namespace" .Values.tools.namespace "subscription" "rhbk-operator" }}
+{{ include "operators.olm-wait" $args }}
+{{end}}
