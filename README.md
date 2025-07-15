@@ -58,7 +58,7 @@ Look at [example-additionalManifests.yaml](./example-additionalManifests.yaml)
 Use `-t` flag to get Kuadrant testsuite dependencies installed: `./install.sh -t`. It sets `tools.enabled` to true 
 and makes Helm consume additional values from additionalManifests.yaml and installs [tools](./tools) helm charts.
 
-If you want to install just tools use `./tools-install.sh`
+If you want to install just tools use `./tools-install.sh`. Add `-k` option to install on Kind.
 
 ## Manual helm
 
