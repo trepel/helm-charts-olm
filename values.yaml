@@ -42,6 +42,13 @@ kuadrant:
   # kuadrant-operator.v1.2.0
   startingCSV: "kuadrant-operator.v0.0.0"
 
+  # (optional)
+  # If specified it will be used as a value for RELATED_IMAGE_WASMSHIM env var
+  # Examples:
+  # registry.redhat.io/rhcl-1/wasm-shim-rhel9@sha256:845bb8af57f3d219aa09b9c0bb20fa945306f3b413e34e196760c8cdf624a532
+  # oci://quay.io/kuadrant/wasm-shim:9f114d4c725e4b81eab38306bace96547db18f71
+  wasmPluginImage: ""
+
 # Installs Gateway API CRD's on cluster. Not needed for Openshift 4.19+
 gatewayAPI:
   version: v1.3.0  # v1.0.0, v1.1.0, v1.2.1, v1.3.0 available; empty value will not create any CRD
