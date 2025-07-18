@@ -1,4 +1,6 @@
-# Helm charts for deploying Kuadrant and testing environment
+# Helm charts for deploying Kuadrant and testing environment on Openshift via OLM
+
+If you are looking for non-OLM Helm charts, go to [helm-charts](https://github.com/Kuadrant/helm-charts)
 
 These charts require that your cluster has loadbalancing service capability. It is divided into two parts. 
 **Operators chart** installs OLM operators first and after waiting for the full deployment the **Instnaces chart** will 
@@ -11,16 +13,18 @@ These charts can help with installing different versions of Kuadrant on an **Ope
 - Red Hat Connectivity Link released build (a `wasm-plugin-pull-secret` secret needed)
 - Red Hat Connectivity Link pre-release build _for testing_
 
-# What is installed
+## What is installed
 
 - Kuadrant-operator
 - Red Hat cert-manager
 - Istio provider
   - Openshift service mesh v3
-- Gateway API CRD's
+  - Just GatewayClass CR (for ocp419+, use `ocp` istioProvider)
+- Gateway API CRD's (if `ocp` istio Provider not set)
+
+## Testing charts
 
 If you choose to enable Kuadrant testing environment with `tools.enable=true`:
-
 - `kuadrant` and `kuadrant2` namespaces
 - testing CA issuers
 
@@ -35,7 +39,7 @@ If you choose to install tools charts:
 
 # How to run
 
-1. Set up [values.yaml](./values.yaml), [tool values.yaml](tools/values.yaml)
+1. Set up [values.yaml](./values.yaml) (and [tool values.yaml](tools/values.yaml))
 2. Login to your cluster
 3. Run:
 ```sh
