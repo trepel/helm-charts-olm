@@ -28,3 +28,6 @@ tools:
   valkey:
     enable: true
     image: ghcr.io/valkey-io/valkey:latest
+  spicedb:
+    enable: true
+    image: quay.io/authzed/spicedb:latest

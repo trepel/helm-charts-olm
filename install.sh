@@ -25,7 +25,7 @@ eval "$helm_cmd"
 
 if [[ "$1" == "-t" ]]; then
 echo "--Installing tools operators"
-helm install --wait tools-operators charts/tools-instances
+helm install --wait tools-operators charts/tools-operators
 
 echo "--Installing tools instances"
 helm install --wait --timeout 10m tools-instances charts/tools-instances
