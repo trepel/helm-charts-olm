@@ -1,17 +1,12 @@
 {{ if .Values.tools.coredns.enable }}
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: coredns
   namespace: {{ .Values.tools.namespace }}
   labels:
     app: coredns
 spec:
-  replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
   selector:
     matchLabels:
       app: coredns
@@ -87,4 +82,7 @@ spec:
             items:
               - key: Corefile
                 path: Corefile
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
 {{ end }}
