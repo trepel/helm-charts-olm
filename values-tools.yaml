@@ -34,3 +34,8 @@ tools:
   customMetricsApiserver:
     enable: true
     image: quay.io/acristur/custom-metrics-apiserver:latest
+  coredns:
+    enable: true
+    metrics: false
+    zone: "k.example.com"
+    image: quay.io/kuadrant/coredns-kuadrant:latest

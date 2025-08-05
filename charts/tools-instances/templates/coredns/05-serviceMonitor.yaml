@@ -1,0 +1,19 @@
+{{ if and .Values.tools.coredns.enable .Values.tools.coredns.metrics }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: coredns
+  namespace: {{ .Values.tools.namespace }}
+  labels:
+    app: coredns
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.tools.namespace }}
+  selector:
+    matchLabels:
+      app: coredns
+      component: metrics
+  endpoints:
+    - port: metrics
+{{ end }}
