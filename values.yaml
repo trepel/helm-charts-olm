@@ -82,3 +82,5 @@ tools:
   enabled: "false"  # if 'true' the testing environment will be set up
 
 additionalManifests: []
+
+preOperatorInstallManifests: []
