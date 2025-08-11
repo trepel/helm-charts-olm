@@ -117,3 +117,15 @@ additionalManifests:
     data:
       .dockerconfigjson: <dockerconfig>
     type: kubernetes.io/dockerconfigjson
+preOperatorInstallManifests:
+# manifests below are applied only after the '.Values.kuadrant.namespace' namespace creation
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: secret-for-pulling-custom-catalogs-index-image
+      namespace: kuadrant-system
+      annotations:
+        "helm.sh/resource-policy": "keep"
+    data:
+      .dockerconfigjson: <dockerconfig>
+    type: kubernetes.io/dockerconfigjson
