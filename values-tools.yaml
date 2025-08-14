@@ -31,3 +31,6 @@ tools:
   spicedb:
     enable: true
     image: quay.io/authzed/spicedb:latest
+  customMetricsApiserver:
+    enable: true
+    image: quay.io/acristur/custom-metrics-apiserver:latest
