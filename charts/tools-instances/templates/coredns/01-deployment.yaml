@@ -1,0 +1,88 @@
+{{ if .Values.tools.coredns.enable }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: coredns
+  namespace: {{ .Values.tools.namespace }}
+  labels:
+    app: coredns
+spec:
+  selector:
+    matchLabels:
+      app: coredns
+  template:
+    metadata:
+      labels:
+        app: coredns
+    spec:
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: coredns
+      containers:
+        - name: "coredns"
+          image: {{ .Values.tools.coredns.image }}
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACES
+              value: "kuadrant"  # todo replace me
+          args: [ "-conf", "/etc/coredns/Corefile" ]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/coredns
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          ports:
+            - containerPort: 53
+              name: "udp-53"
+              protocol: UDP
+            - containerPort: 53
+              name: "tcp-53"
+              protocol: TCP
+            {{- if .Values.tools.coredns.metrics }}
+            - containerPort: 9153
+              name: "tcp-9153"
+              protocol: TCP
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8181
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: coredns
+            items:
+              - key: Corefile
+                path: Corefile
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+{{ end }}
