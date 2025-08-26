@@ -1,0 +1,49 @@
+{{- if .Values.kuadrant.extensionsBinaryImage }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: extensions-pvc
+  labels:
+    type: extensions-storage
+  namespace: {{ .Values.kuadrant.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: extensions-binary
+  namespace: {{ .Values.kuadrant.namespace }}
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: copy-extensions
+          command:
+            - cp
+            - -r
+            - /extensions/.
+            - /export
+          image: {{ .Values.kuadrant.extensionsBinaryImage }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /export
+              name: extensions-binary-volume
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      volumes:
+        - name: extensions-binary-volume
+          persistentVolumeClaim:
+            claimName: extensions-pvc
+      
+{{- end }}
