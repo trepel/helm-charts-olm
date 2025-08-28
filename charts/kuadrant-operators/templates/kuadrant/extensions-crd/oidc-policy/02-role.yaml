@@ -72,4 +72,16 @@ rules:
   - get
   - patch
   - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: oidc-policy-manager-role-binding
+roleRef:
+  name: oidc-policy-manager-role
+  kind: ClusterRole
+subjects:
+- kind: ServiceAccount
+  name: kuadrant-operator-controller-manager
+  namespace: {{ .Values.kuadrant.namespace }}
 {{- end }}
