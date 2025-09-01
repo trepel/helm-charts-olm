@@ -4,6 +4,8 @@ on:
     branches: [ main ]
     paths:
       - 'charts/**'
+      - 'values-tools.yaml'
+      - 'values.yaml'
 jobs:
   release:
     runs-on: ubuntu-latest
