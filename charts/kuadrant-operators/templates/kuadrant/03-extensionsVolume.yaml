@@ -30,7 +30,7 @@ spec:
             - /extensions/.
             - /export
           image: {{ .Values.kuadrant.extensionsBinaryImage }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           volumeMounts:
             - mountPath: /export
               name: extensions-binary-volume
