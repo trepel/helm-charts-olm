@@ -30,7 +30,7 @@ rules:
   - apiGroups:
       - kuadrant.io
     resources:
-      - dnsrecord
+      - dnsrecords
     verbs:
       - get
       - list
