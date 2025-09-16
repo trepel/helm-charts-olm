@@ -52,7 +52,7 @@ kuadrant:
   # (optional)
   # if specified it will be used to retrieve the extensions binaries from the image
   # and mount its contents in the kuadrant-operator subscription
-  extensionsBinaryImage: "quay.io/acristur/extensions:dev"
+  extensionsBinaryImage: ""
 
 # Installs Gateway API CRD's on cluster. Not needed for Openshift 4.19+
 gatewayAPI:
