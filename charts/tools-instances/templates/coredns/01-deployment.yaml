@@ -16,7 +16,7 @@ spec:
         app: coredns
     spec:
       terminationGracePeriodSeconds: 30
-      serviceAccountName: coredns
+      serviceAccountName: coredns-service
       containers:
         - name: "coredns"
           image: {{ .Values.tools.coredns.image }}
