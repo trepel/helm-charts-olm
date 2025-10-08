@@ -30,13 +30,4 @@ spec:
       - name: "RELATED_IMAGE_WASMSHIM"
         value: {{ .Values.kuadrant.wasmPluginImage }}
 {{- end }}
-{{- if .Values.kuadrant.extensionsBinaryImage}}
-    volumeMounts:
-      - mountPath: /extensions
-        name: extensions-binary-volume
-    volumes:
-      - name: extensions-binary-volume
-        persistentVolumeClaim:
-          claimName: extensions-pvc
-{{- end }}
 {{- end }}
