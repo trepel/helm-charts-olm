@@ -30,4 +30,11 @@ spec:
       - name: "RELATED_IMAGE_WASMSHIM"
         value: {{ .Values.kuadrant.wasmPluginImage }}
 {{- end }}
+{{- if and .Values.kuadrant.wasmPluginImage .Values.kuadrant.protectedRegistry }}
+    {{- if not (hasPrefix .Values.kuadrant.protectedRegistry .Values.kuadrant.wasmPluginImage) }}
+    {{- fail "protectedRegistry must match the registry in wasmPluginImage" }}
+    {{- end }}
+      - name: "PROTECTED_REGISTRY"
+        value: {{ .Values.kuadrant.protectedRegistry }}
+{{- end }}
 {{- end }}
