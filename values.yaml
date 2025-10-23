@@ -6,7 +6,7 @@ kuadrant:
   # OLM index image to use for kuadrant deployment, creates CatalogSource CR with this image
   # If left empty it uses CatalogSource defined in catalogSource
   # For list of available upstream CatalogSource's see https://quay.io/repository/kuadrant/kuadrant-operator-catalog?tab=tags
-  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.2.0'
+  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.3.0'
 
   # (optional)
   # Name of pull secret for pulling indexImage if needed. Can be left empty.
@@ -44,11 +44,18 @@ kuadrant:
   startingCSV: "kuadrant-operator.v0.0.0"
 
   # (optional)
-  # If specified it will be used as a value for RELATED_IMAGE_WASMSHIM env var
-  # Examples:
-  # registry.redhat.io/rhcl-1/wasm-shim-rhel9@sha256:845bb8af57f3d219aa09b9c0bb20fa945306f3b413e34e196760c8cdf624a532
-  # oci://quay.io/kuadrant/wasm-shim:9f114d4c725e4b81eab38306bace96547db18f71
+  # If specified, these will be used as values for RELATED_IMAGE_WASMSHIM and PROTECTED_REGISTRY env vars respectively.
+  # Example values would be
+  # "registry.stage.redhat.io/rhcl-1/wasm-shim-rhel9@sha256:c78019c49f4f2d03da9df6e2711585333a7b4a409011d105bdaab3b391ef7670"
+  # and
+  # "registry.stage.redhat.io"
+  # respectively.
+  # If protected registry is not used leave the protectedRegistry empty.
+  # If protected registry is used the protectedRegistry value must be the same as a registry of wasmPluginImage.
+  # IMPORTANT: When using protectedRegistry, ensure that a pull secret named
+  # 'wasm-plugin-pull-secret' exists in the Gateway namespace before deployment.
   wasmPluginImage: ""
+  protectedRegistry: ""
 
 # Installs Gateway API CRD's on cluster. Not needed for Openshift 4.19+
 gatewayAPI:
