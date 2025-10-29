@@ -23,8 +23,8 @@ spec:
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACES
-              value: "kuadrant"  # todo replace me
-          args: [ "-conf", "/etc/coredns/Corefile" ]
+              value: ""
+          args: [ "-conf", "/etc/coredns/Corefile", "-dns.port", "5300"]
           volumeMounts:
             - name: config-volume
               mountPath: /etc/coredns
@@ -36,10 +36,10 @@ spec:
               cpu: 100m
               memory: 128Mi
           ports:
-            - containerPort: 53
+            - containerPort: 5300
               name: "udp-53"
               protocol: UDP
-            - containerPort: 53
+            - containerPort: 5300
               name: "tcp-53"
               protocol: TCP
             {{- if .Values.tools.coredns.metrics }}
