@@ -1,0 +1,56 @@
+{{ if .Values.tools.jaeger.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-config
+  namespace: {{ .Values.tools.namespace }}
+data:
+  jaeger-config.yaml: |
+    service:
+      extensions: [jaeger_query, jaeger_storage, healthcheckv2]
+      pipelines:
+        traces:
+          receivers: [otlp, zipkin]
+          processors: [batch]
+          exporters: [jaeger_storage_exporter]
+
+    extensions:
+      jaeger_storage:
+        backends:
+          some_storage:
+            memory:
+              max_traces: 50000
+      jaeger_query:
+        storage:
+          traces: some_storage
+        ui:
+          config_file: /etc/jaeger/ui-config.json
+      healthcheckv2:
+        use_v2: true
+        http:
+          endpoint: 0.0.0.0:13133
+
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      zipkin:
+        endpoint: 0.0.0.0:9411
+
+    processors:
+      batch:
+
+    exporters:
+      jaeger_storage_exporter:
+        trace_storage: some_storage
+
+  ui-config.json: |
+    {
+      "monitor": {
+        "menuEnabled": true
+      }
+    }
+{{end}}

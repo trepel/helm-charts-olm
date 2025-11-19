@@ -24,36 +24,44 @@ spec:
         prometheus.io/port: "16686"
     spec:
       containers:
-        - env:
-            - name: COLLECTOR_ZIPKIN_HTTP_PORT
-              value: "9411"
-            - name: MAX_TRACES
-              value: "50000"
-            - name: COLLECTOR_OTLP_ENABLED
-              value: 'true'
-          image: {{ .Values.tools.jaeger.image }}          
+        - image: {{ .Values.tools.jaeger.image }}
           name: jaeger
-          args: ["--memory.max-traces=$(MAX_TRACES)"]
+          args: ["--config", "/etc/jaeger/jaeger-config.yaml"]
+          volumeMounts:
+            - name: jaeger-config
+              mountPath: /etc/jaeger
+              readOnly: true
           ports:
-            - containerPort: 5775
-              protocol: UDP
-            - containerPort: 6831
-              protocol: UDP
-            - containerPort: 6832
-              protocol: UDP
             - containerPort: 16686
               protocol: TCP
             - containerPort: 4317
               protocol: TCP
             - containerPort: 9411
               protocol: TCP
-            - containerPort: 5778
+            - containerPort: 4318
               protocol: TCP
-          readinessProbe:
+            - containerPort: 13133
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 5
             httpGet:
-              path: "/"
-              port: 14269
+              path: /status
+              port: 13133
+              scheme: HTTP
             initialDelaySeconds: 5
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 13133
+              scheme: HTTP
+            initialDelaySeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           resources:
             limits:
               cpu: "500m"
@@ -61,4 +69,8 @@ spec:
             requests:
               cpu: "5m"
               memory: "100Mi"
+      volumes:
+        - name: jaeger-config
+          configMap:
+            name: jaeger-config
 {{end}}
