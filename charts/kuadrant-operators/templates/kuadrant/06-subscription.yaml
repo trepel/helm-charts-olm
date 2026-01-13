@@ -3,6 +3,9 @@ kind: Subscription
 metadata:
   name: kuadrant-operator
   namespace: {{ .Values.kuadrant.namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
 spec:
   name: {{ .Values.kuadrant.operatorName }}
   channel: {{ .Values.kuadrant.channel }}
