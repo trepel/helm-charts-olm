@@ -36,7 +36,6 @@ If you choose to install tools charts:
 - Redis
 - Dragonfly
 - Valkey
-- SpiceDB
 
 # How to run
 
