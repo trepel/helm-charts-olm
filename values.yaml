@@ -95,10 +95,8 @@ tools:
 # OpenTelemetry tracing configuration for Kuadrant operator
 # When enabled, the operator will export traces to Jaeger using OTLP protocol)
 # The operator will be configured with the following OTEL environment variables:
-#   - OTEL_ENABLED: "true"
-#   - OTEL_EXPORTER_OTLP_ENDPOINT: "jaeger-collector.tools.svc.cluster.local:4318"
+#   - OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger-collector.tools.svc.cluster.local:4318"
 #   - OTEL_EXPORTER_OTLP_INSECURE: "true"
-#   - OTEL_METRICS_INTERVAL_SECONDS: "5"
 enableTracing:
   enable: true
 
