@@ -36,14 +36,10 @@ spec:
       - name: "DNS_DEFAULT_LB_TTL"
         value: "1"
 {{- if .Values.enableTracing.enable }}
-      - name: "OTEL_ENABLED"
-        value: "true"
       - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-        value: "jaeger-collector.tools.svc.cluster.local:4318"
+        value: "http://jaeger-collector.tools.svc.cluster.local:4318"
       - name: "OTEL_EXPORTER_OTLP_INSECURE"
         value: "true"
-      - name: "OTEL_METRICS_INTERVAL_SECONDS"
-        value: "5"
 {{- end }}
 {{- if and (eq .Values.istio.istioProvider "ocp") (eq .Values.kuadrant.operatorName "kuadrant-operator") }}
       - name: "ISTIO_GATEWAY_CONTROLLER_NAMES"
