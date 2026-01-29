@@ -66,6 +66,32 @@ subjects:
   name: post-install-helm-hook
   namespace: {{ .namespace }}
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: post-install-helm-hook-cluster-role
+rules:
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - consoles
+  verbs:
+  - get
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: post-install-helm-hook-cluster-rb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: post-install-helm-hook-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: post-install-helm-hook
+  namespace: {{ .namespace }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -96,6 +122,11 @@ data:
     # Another wait for Kuadrant to get ready just to be on the safe side
     kubectl wait --for=jsonpath={.status.observedGeneration}=$(kubectl get kuadrant kuadrant-sample --namespace {{ .namespace }} -o jsonpath={.metadata.generation}) kuadrant kuadrant-sample --namespace {{ .namespace }} --timeout=300s
     kubectl wait --for=condition=Ready kuadrant kuadrant-sample --namespace {{ .namespace }} --timeout=300s
+
+    # Enable Kuadrant console plugin if not already enabled
+    if ! kubectl get console.operator.openshift.io/cluster -o jsonpath='{.spec.plugins[*]}' | grep -q "kuadrant-console-plugin"; then
+        kubectl patch console.operator.openshift.io/cluster --type=json -p '[{"op": "add", "path": "/spec/plugins/-", "value": "kuadrant-console-plugin"}]'
+    fi
 ---
 apiVersion: batch/v1
 kind: Job
