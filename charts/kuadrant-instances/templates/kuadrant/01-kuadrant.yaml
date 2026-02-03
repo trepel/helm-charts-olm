@@ -4,10 +4,17 @@ kind: Kuadrant
 metadata:
   name: kuadrant-sample
   namespace: {{ .Values.kuadrant.namespace }}
-{{ if eq .Values.kuadrant.enableDebug true }}
+{{ if eq .Values.kuadrant.enableObservability true }}
 spec:
   observability:
+    dataPlane:
+      defaultLevels:
+        - debug: 'true'
+      httpHeaderIdentifier: x-request-id
     enable: true
+    tracing:
+      defaultEndpoint: 'rpc://jaeger-collector.tools.svc.cluster.local:4317'
+      insecure: true
 {{ else }}
 spec: {}
 {{ end }}

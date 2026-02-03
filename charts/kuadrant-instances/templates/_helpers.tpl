@@ -1,4 +1,4 @@
-{{/* Restarts Kuadrant Operator if needed. Waits for Kuadrant, Limitador and Authorino CRs and patch them to enable observability and debug logging if desired */}}
+{{/* Restarts Kuadrant Operator if needed. Waits for Kuadrant, Limitador and Authorino CRs and patch them to enable observability (debug logging, tracing, monitoring) if desired. Also patches limitador subscription with OTEL env vars if observability is enabled. */}}
 {{- define "kuadrant.post-install-helm-hook" -}}
 apiVersion: v1
 kind: ServiceAccount
@@ -51,6 +51,14 @@ rules:
   - update
   - patch
   - delete
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - subscriptions
+  verbs:
+  - get
+  - patch
+  - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -109,8 +117,32 @@ data:
     fi
     kubectl wait --for=condition=Ready kuadrant kuadrant-sample --namespace {{ .namespace }} --timeout=300s
 
-    ENABLE_DEBUG="{{ .enableDebug }}"
-    if [[ "$ENABLE_DEBUG" == "true" ]]; then
+    ENABLE_OBSERVABILITY="{{ .enableObservability }}"
+    # Patch limitador subscription with OTEL env vars if observability is enabled
+    # Patch limitador and authorino CRs to enable debug logging and wait for ready status
+    if [[ "$ENABLE_OBSERVABILITY" == "true" ]]; then
+        LIMITADOR_SUB=$(kubectl get subscription --namespace {{ .namespace }} -o json | jq -r '.items[] | select(.spec.name=="limitador-operator") | .metadata.name')
+        if [[ -n "$LIMITADOR_SUB" ]]; then
+            kubectl patch subscription "$LIMITADOR_SUB" --namespace {{ .namespace }} --type merge --patch '{
+              "spec": {
+                "config": {
+                  "env": [
+                    {
+                      "name": "OTEL_EXPORTER_OTLP_ENDPOINT",
+                      "value": "http://jaeger-collector.tools.svc.cluster.local:4318"
+                    },
+                    {
+                      "name": "OTEL_EXPORTER_OTLP_INSECURE",
+                      "value": "true"
+                    }
+                  ]
+                }
+              }
+            }'
+        else
+            echo "Warning: limitador-operator subscription not found in namespace {{ .namespace }}"
+        fi
+
         kubectl patch limitador limitador --namespace {{ .namespace }} --type merge --patch '{"spec":{"verbosity":3}}'
         kubectl patch authorino authorino --namespace {{ .namespace }} --type merge --patch '{"spec":{"logLevel":"debug", "logMode": "development"}}'
         kubectl wait --for=jsonpath={.status.observedGeneration}=$(kubectl get limitador limitador --namespace {{ .namespace }} -o jsonpath={.metadata.generation}) limitador limitador --namespace {{ .namespace }} --timeout=300s

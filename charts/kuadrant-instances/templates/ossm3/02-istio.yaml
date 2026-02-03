@@ -6,7 +6,18 @@ metadata:
 spec:
   namespace: {{ .Values.istio.namespace }}
   values:
+{{ if eq .Values.kuadrant.enableObservability true }}
+    meshConfig:
+      defaultConfig:
+        tracing: { }
+      enableTracing: true
+      extensionProviders:
+        - name: jaeger-otlp
+          opentelemetry:
+            port: 4317
+            service: jaeger-collector.tools.svc.cluster.local
+{{ end }}
     pilot:
       autoscaleMin: 2
   version: {{ .Values.istio.ossm3.version }}
-{{end}}
+{{ end }}
