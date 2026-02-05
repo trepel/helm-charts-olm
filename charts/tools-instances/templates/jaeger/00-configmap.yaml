@@ -13,7 +13,14 @@ data:
           receivers: [otlp, zipkin]
           processors: [batch]
           exporters: [jaeger_storage_exporter]
-
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug]        
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug] 
     extensions:
       jaeger_storage:
         backends:
@@ -46,7 +53,8 @@ data:
     exporters:
       jaeger_storage_exporter:
         trace_storage: some_storage
-
+      debug:
+        verbosity: basic
   ui-config.json: |
     {
       "monitor": {

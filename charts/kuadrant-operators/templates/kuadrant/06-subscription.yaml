@@ -35,13 +35,11 @@ spec:
         value: "1"
       - name: "DNS_DEFAULT_LB_TTL"
         value: "1"
-{{- if .Values.enableTracing.enable }}
+{{- if .Values.kuadrant.enableObservability }}
       - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
         value: "http://jaeger-collector.tools.svc.cluster.local:4318"
       - name: "OTEL_EXPORTER_OTLP_INSECURE"
         value: "true"
-{{- end }}
-{{- if .Values.kuadrant.enableDebug }}
       - name: "LOG_LEVEL"
         value: "debug"
 {{- end }}
