@@ -1,2 +1,4 @@
+{{- if and (.Values.kuadrant.indexImage) (ne .Values.kuadrant.indexImage "") }}
 {{ $args := dict "namespace" .Values.kuadrant.namespace "subscription" "kuadrant-operator" "catalogsource" "kuadrant-upstream" "catalogsourceNamespace" .Values.kuadrant.namespace }}
 {{ include "operators.catalogsource-wait" $args }}
+{{- end }}
