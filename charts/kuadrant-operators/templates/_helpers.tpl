@@ -124,10 +124,14 @@ data:
   "run.sh": |
     #!/bin/bash
     set -xe
-    kubectl wait --for=jsonpath={.status.installPlanRef.name} subscription {{ .subscription }} --timeout=10s
+    LOCKDIR="/mutex/lockdir"
+
+    kubectl wait --for=jsonpath={.status.installPlanRef.name} subscription {{ .subscription }} --timeout=60s
     ip=$(kubectl get subscription {{ .subscription }} -o=jsonpath={.status.installPlanRef.name})
-    kubectl patch installplan ${ip} --type merge --patch '{"spec":{"approved":true}}'
-    kubectl wait --for=condition=Installed installplan ${ip} --timeout=60s
+    if mkdir "$LOCKDIR" 2>/dev/null; then
+        kubectl patch installplan ${ip} --type merge --patch '{"spec":{"approved":true}}';  # runs only once
+    fi
+    kubectl wait --for=condition=Installed installplan ${ip} --timeout=120s
 kind: ConfigMap
 metadata:
   name: post-install-hook-{{ .subscription }}
@@ -153,11 +157,15 @@ spec:
         volumeMounts:
         - name: script-volume
           mountPath: /scripts
+        - name: mutex
+          mountPath: /mutex
         resources: {}
       volumes:
         - name: script-volume
           configMap:
             name: post-install-hook-{{ .subscription }}
+        - name: mutex
+          emptyDir: {}
       serviceAccount: post-install-hook-{{ .subscription }}
       restartPolicy: OnFailure
 {{- end }}
