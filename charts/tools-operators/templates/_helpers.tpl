@@ -13,7 +13,7 @@ metadata:
   namespace: {{ .namespace }}
 rules:
 - apiGroups:
-  - operators.coreos.com 
+  - operators.coreos.com
   resources:
   - subscriptions
   - installplans
@@ -38,18 +38,22 @@ subjects:
   namespace: {{ .namespace }}
 ---
 apiVersion: v1
+data:
+  "run.sh": |
+    #!/bin/bash
+    set -xe
+    LOCKDIR="/mutex/lockdir"
+
+    kubectl wait --for=jsonpath={.status.installPlanRef.name} subscription {{ .subscription }} --timeout=60s
+    ip=$(kubectl get subscription {{ .subscription }} -o=jsonpath={.status.installPlanRef.name})
+    if mkdir "$LOCKDIR" 2>/dev/null; then
+        kubectl patch installplan ${ip} --type merge --patch '{"spec":{"approved":true}}';  # runs only once
+    fi
+    kubectl wait --for=condition=Installed installplan ${ip} --timeout=120s
 kind: ConfigMap
 metadata:
   name: post-install-hook-{{ .subscription }}
   namespace: {{ .namespace }}
-data:
-  "run.sh": |
-    #/bin/bash
-    set -xe
-    kubectl wait --for=jsonpath={.status.installPlanRef.name} subscription {{ .subscription }} --timeout=10s
-    ip=$(kubectl get subscription {{ .subscription }} -o=jsonpath={.status.installPlanRef.name})
-    kubectl patch installplan ${ip} --type merge --patch '{"spec":{"approved":true}}'
-    kubectl wait --for=condition=Installed installplan ${ip} --timeout=60s
 ---
 apiVersion: batch/v1
 kind: Job
@@ -71,11 +75,15 @@ spec:
         volumeMounts:
         - name: script-volume
           mountPath: /scripts
+        - name: mutex
+          mountPath: /mutex
         resources: {}
       volumes:
         - name: script-volume
           configMap:
             name: post-install-hook-{{ .subscription }}
+        - name: mutex
+          emptyDir: {}
       serviceAccount: post-install-hook-{{ .subscription }}
       restartPolicy: OnFailure
 {{- end }}
