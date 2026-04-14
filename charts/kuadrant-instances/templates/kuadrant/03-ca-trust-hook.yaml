@@ -1,0 +1,104 @@
+{{ if ne .Values.kuadrant.operatorName "authorino-operator" }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: authorino-ca-trust-hook
+  namespace: {{ .Values.kuadrant.namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: authorino-ca-trust-hook-role
+  namespace: {{ .Values.kuadrant.namespace }}
+rules:
+- apiGroups:
+  - operator.authorino.kuadrant.io
+  resources:
+  - authorinos
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: authorino-ca-trust-hook-rb
+  namespace: {{ .Values.kuadrant.namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: authorino-ca-trust-hook-role
+subjects:
+- kind: ServiceAccount
+  name: authorino-ca-trust-hook
+  namespace: {{ .Values.kuadrant.namespace }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: authorino-ca-trust-hook
+  namespace: {{ .Values.kuadrant.namespace }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -xec
+        - |-
+          NAMESPACE="{{ .Values.kuadrant.namespace }}"
+          
+          # merge the cluster CA bundle with the one from the Authorino pod and create a configmap with the merged bundle
+          kubectl wait --for=condition=Ready authorino authorino -n "$NAMESPACE" --timeout=300s
+          AUTHORINO_POD=$(kubectl get pod -l authorino-resource=authorino -n "$NAMESPACE" -o jsonpath='{.items[0].metadata.name}')
+          kubectl exec "$AUTHORINO_POD" -n "$NAMESPACE" -- sh -c 'cat /etc/ssl/certs/ca-bundle.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt' > /tmp/ca-bundle.crt
+
+          # create a configmap with the merged CA bundle and patch the Authorino deployment to mount it as a volume
+          kubectl create configmap authorino-cluster-trust-ca-bundle -n "$NAMESPACE" --from-file=ca-bundle.crt=/tmp/ca-bundle.crt --dry-run=client -o yaml | kubectl apply -f -
+          VOLUME='{"name":"cluster-trust-bundle","mountPath":"/etc/ssl/certs","configMaps":["authorino-cluster-trust-ca-bundle"]}'
+          if kubectl get authorino authorino -n "$NAMESPACE" -o jsonpath='{.spec.volumes.items}' 2>/dev/null | grep -q .; then
+            kubectl patch authorino authorino -n "$NAMESPACE" --type json -p "[{\"op\": \"add\", \"path\": \"/spec/volumes/items/-\", \"value\": $VOLUME}]"
+          else
+            kubectl patch authorino authorino -n "$NAMESPACE" --type merge -p "{\"spec\":{\"volumes\":{\"items\":[$VOLUME]}}}"
+          fi
+
+          kubectl rollout status deployment/authorino -n "$NAMESPACE" --timeout=300s
+        image: quay.io/kuadrant/testsuite-pipelines-tools:latest
+        name: ca-trust
+      serviceAccount: authorino-ca-trust-hook
+      restartPolicy: OnFailure
+{{ end }}
