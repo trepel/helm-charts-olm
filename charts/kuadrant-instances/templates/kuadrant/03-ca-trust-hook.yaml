@@ -26,6 +26,7 @@ rules:
   - deployments
   verbs:
   - get
+  - list
   - watch
 - apiGroups:
   - ""
@@ -82,8 +83,15 @@ spec:
         - |-
           NAMESPACE="{{ .Values.kuadrant.namespace }}"
           
-          # merge the cluster CA bundle with the one from the Authorino pod and create a configmap with the merged bundle
           kubectl wait --for=condition=Ready authorino authorino -n "$NAMESPACE" --timeout=300s
+
+          # skip if cluster-trust-bundle volume is already configured in Authorino CR
+          if kubectl get authorino authorino -n "$NAMESPACE" -o jsonpath='{.spec.volumes.items[*].name}' 2>/dev/null | grep -qw 'cluster-trust-bundle'; then
+            echo "cluster-trust-bundle volume already present in Authorino CR, skipping"
+            exit 0
+          fi
+
+          # merge the cluster CA bundle with the one from the Authorino pod and create a configmap with the merged bundle
           AUTHORINO_POD=$(kubectl get pod -l authorino-resource=authorino -n "$NAMESPACE" -o jsonpath='{.items[0].metadata.name}')
           kubectl exec "$AUTHORINO_POD" -n "$NAMESPACE" -- sh -c 'cat /etc/ssl/certs/ca-bundle.crt /var/run/secrets/kubernetes.io/serviceaccount/ca.crt' > /tmp/ca-bundle.crt
 
