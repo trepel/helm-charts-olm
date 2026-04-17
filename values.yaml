@@ -6,7 +6,7 @@ kuadrant:
   # OLM index image to use for kuadrant deployment, creates CatalogSource CR with this image
   # If left empty it uses CatalogSource defined in catalogSource
   # For list of available upstream CatalogSource's see https://quay.io/repository/kuadrant/kuadrant-operator-catalog?tab=tags
-  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.3.0'
+  indexImage: 'quay.io/kuadrant/kuadrant-operator-catalog:v1.4.3'
 
   # (optional)
   # Name of pull secret for pulling indexImage if needed. Can be left empty.
@@ -68,7 +68,7 @@ kuadrant:
 
 # Installs Gateway API CRD's on cluster. Not needed for Openshift 4.19+
 gatewayAPI:
-  version: v1.4.0  # v1.2.1, v1.3.0, v1.4.0, v1.5.0 available; leave empty for installing on Openshift 4.19+
+  version: v1.5.0  # v1.3.0, v1.4.0, v1.5.0 available; leave empty for installing on Openshift 4.19+
 
 # Gateway API implementation. Currently only Openshift Service Mesh 3 is supported
 istio:
@@ -80,7 +80,7 @@ istio:
   # if left empty no Gateway API implementation is installed
   istioProvider: ossm3
   ossm3:  # Openshift Service Mesh, but version 3
-    version: v1.27-latest
+    version: v1.28-latest
     operator:
       channel: stable
       startingCSV: servicemeshoperator3.v3.0.0  # Ignored if 'Automatic' bellow
